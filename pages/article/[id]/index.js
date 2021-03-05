@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 
-const Article = ({article}) => {
+const article = ({article}) => {
 	//const router = useRouter()
 	//const { id } = router.query
 
@@ -40,13 +40,18 @@ export const getStaticProps = async (serverResponse) => {
 }
 
 export const getStaticPaths = async () => {
-	const res = await fetch(`https://jsonplaceholder.typicode.com/posts`)
+	const res = await fetch(
+		`https://jsonplaceholder.typicode.com/posts`
+	)
 	const articles = await res.json();
 
 	const ids = articles.map((article) => article.id);
 
-	const paths = ids.map((id) => ({ params: {
-		id: id.toString() } }));
+	const paths = ids.map((id) => ({ 
+		params: {
+			id: id.toString() 
+		} 
+	}));
 
 	return {
 		paths,
@@ -54,4 +59,4 @@ export const getStaticPaths = async () => {
 	}
 }
 
-export default Article
+export default article
