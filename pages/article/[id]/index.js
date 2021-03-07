@@ -1,3 +1,4 @@
+import {server} from '../../../config';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 
@@ -15,6 +16,37 @@ const article = ({article}) => {
 	)
 }
 
+export const getStaticProps = async (serverResponse) => {
+	const res = await fetch(`${server}/api/article/${serverResponse.params.id}`)
+	const article = await res.json();
+
+	return {
+		props: { 
+			article
+		}
+	}
+}
+
+export const getStaticPaths = async () => {
+	const res = await fetch(
+		`${server}/api/articles`
+	)
+	const articles = await res.json();
+
+	const ids = articles.map((article) => article.id);
+
+	const paths = ids.map((id) => ({ 
+		params: {
+			id: id.toString() 
+		} 
+	}));
+
+	return {
+		paths,
+		fallback: false
+	}
+}
+
 // call when request is made
 /*export const getServerSideProps = async (serverResponse) => {
 	const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${serverResponse.params.id}`)
@@ -28,7 +60,7 @@ const article = ({article}) => {
 }*/
 
 // beter way for static websites
-export const getStaticProps = async (serverResponse) => {
+/* export const getStaticProps = async (serverResponse) => {
 	const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${serverResponse.params.id}`)
 	const article = await res.json();
 
@@ -57,6 +89,6 @@ export const getStaticPaths = async () => {
 		paths,
 		fallback: false
 	}
-}
+} */
 
 export default article
